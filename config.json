@@ -1,0 +1,8 @@
+{
+  "defaultVolume": 100,
+  "maxQueueSize": 100,
+  "leaveOnEmpty": true,
+  "leaveOnEmptyCooldown": 300000,
+  "leaveOnEnd": true,
+  "leaveOnEndCooldown": 300000
+}
