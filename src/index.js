@@ -44,7 +44,6 @@ client.lavalink = new LavalinkManager({
     sendToShard: (guildId, payload) => client.guilds.cache.get(guildId)?.shard?.send(payload),
     client: {
         id: process.env.CLIENT_ID,
-        username: 'HelloTunes',
     },
     autoSkip: true,
     playerOptions: {

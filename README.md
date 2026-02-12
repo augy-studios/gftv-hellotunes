@@ -29,7 +29,7 @@ A feature-rich Discord music bot built with Discord.js and Lavalink, featuring s
 
 Before running the bot, you need:
 
-1. **Node.js** (v16.9.0 or higher)
+1. **Node.js** (v18.0.0 or higher)
 2. **Discord Bot Token** from [Discord Developer Portal](https://discord.com/developers/applications)
 3. **Lavalink Server** - Download from [Lavalink Releases](https://github.com/lavalink-devs/Lavalink/releases)
 
