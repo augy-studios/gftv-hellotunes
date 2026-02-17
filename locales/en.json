@@ -1,0 +1,74 @@
+{
+    "commands": {
+        "play": {
+            "description": "Play a song or add it to the queue",
+            "now_playing": "Now Playing",
+            "added_to_queue": "Added to Queue",
+            "playlist_added": "Playlist Added",
+            "no_results": "No results found!",
+            "search_failed": "Search failed"
+        },
+        "pause": {
+            "description": "Pause the current song",
+            "success": "Paused the music!",
+            "already_paused": "Already paused!",
+            "nothing_playing": "Nothing is playing!"
+        },
+        "resume": {
+            "description": "Resume the paused song",
+            "success": "Resumed the music!",
+            "already_playing": "Already playing!"
+        },
+        "skip": {
+            "description": "Skip the current song",
+            "success": "Skipped!"
+        },
+        "stop": {
+            "description": "Stop playback and clear the queue",
+            "success": "Stopped and cleared the queue!"
+        },
+        "queue": {
+            "description": "View the current queue",
+            "title": "Music Queue",
+            "now_playing": "Now Playing",
+            "up_next": "Up Next",
+            "empty": "Queue is empty"
+        },
+        "shuffle": {
+            "description": "Shuffle the queue",
+            "success": "Shuffled {count} tracks!"
+        },
+        "loop": {
+            "description": "Toggle loop mode",
+            "modes": {
+                "off": "Off",
+                "track": "Track",
+                "queue": "Queue"
+            },
+            "set": "Loop mode set to: {mode}"
+        },
+        "volume": {
+            "description": "Set the player volume",
+            "set": "Volume set to {volume}%",
+            "invalid": "Volume must be between 0 and 150!"
+        }
+    },
+    "errors": {
+        "not_in_voice": "You must be in a voice channel!",
+        "not_same_voice": "You must be in the same voice channel as me!",
+        "no_player": "No active player!",
+        "nothing_playing": "Nothing is playing!",
+        "queue_empty": "Queue is empty!",
+        "connect_failed": "Could not connect to voice channel",
+        "missing_permissions": "I don't have permission to do that!",
+        "invalid_position": "Invalid position!"
+    },
+    "common": {
+        "duration": "Duration",
+        "requested_by": "Requested by",
+        "position": "Position",
+        "tracks": "tracks",
+        "volume": "Volume",
+        "loop": "Loop"
+    }
+}

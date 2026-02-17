@@ -1,0 +1,22 @@
+[Unit]
+Description=Augy Music Bot - Discord Music Bot
+After=network.target lavalink.service
+Wants=lavalink.service
+
+[Service]
+Type=simple
+User=augy
+Group=augy
+WorkingDirectory=/home/augy/augy-music-bot
+ExecStart=/home/augy/augy-music-bot/venv/bin/python main.py
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=augy-music-bot
+
+# Environment
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
