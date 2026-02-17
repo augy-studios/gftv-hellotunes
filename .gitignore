@@ -76,6 +76,9 @@ logs/
 *.sqlite
 *.sqlite3
 
+# Local scripts
+run.bat
+
 # Lavalink
 Lavalink/
 *.jar
