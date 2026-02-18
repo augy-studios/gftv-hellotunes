@@ -7,17 +7,17 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 
 async def clear():
-    client = discord.Client(intents=discord.Intents.default())
+    client = commands.Bot(command_prefix="!", intents=discord.Intents.default())
 
-    @client.event
-    async def on_ready():
-        print(f"Logged in as {client.user}")
+    async with client:
+        await client.login(os.getenv("TOKEN"))
 
         # Clear global commands
         client.tree.clear_commands(guild=None)
@@ -33,9 +33,6 @@ async def clear():
             print(f"Guild commands cleared for {guild_id}.")
 
         print("Done.")
-        await client.close()
-
-    await client.start(os.getenv("TOKEN"))
 
 
 asyncio.run(clear())

@@ -23,6 +23,9 @@ class LavalinkNode:
 class Config:
     """Bot configuration loaded from environment variables."""
 
+    # Environment
+    environment: str = field(default_factory=lambda: os.getenv("ENVIRONMENT", "PROD").upper())
+
     # Bot settings
     token: str = field(default_factory=lambda: os.getenv("TOKEN", ""))
     client_id: str = field(default_factory=lambda: os.getenv("CLIENT_ID", ""))
@@ -100,11 +103,14 @@ class Config:
         """Parse Lavalink node configuration from environment variables."""
         nodes = []
 
-        # Parse main node from individual env vars
-        host = os.getenv("LAVALINK_HOST", "")
-        port = int(os.getenv("LAVALINK_PORT", "2333"))
-        password = os.getenv("LAVALINK_PASSWORD", "youshallnotpass")
-        secure = os.getenv("LAVALINK_SECURE", "false").lower() == "true"
+        # Pick the correct prefix based on environment
+        env = os.getenv("ENVIRONMENT", "PROD").upper()
+        prefix = "DEV" if env == "DEV" else "PROD"
+
+        host = os.getenv(f"{prefix}_LAVALINK_HOST", "")
+        port = int(os.getenv(f"{prefix}_LAVALINK_PORT", "2333"))
+        password = os.getenv(f"{prefix}_LAVALINK_PASSWORD", "youshallnotpass")
+        secure = os.getenv(f"{prefix}_LAVALINK_SECURE", "false").lower() == "true"
 
         # Only add the main node if a host is explicitly configured
         if host:
@@ -112,7 +118,7 @@ class Config:
                 host=host,
                 port=port,
                 password=password,
-                identifier="MAIN",
+                identifier=f"{prefix}_MAIN",
                 secure=secure
             ))
 
@@ -134,6 +140,16 @@ class Config:
                 pass
 
         return nodes
+
+    @property
+    def is_dev(self) -> bool:
+        """Returns True if running in development mode."""
+        return self.environment == "DEV"
+
+    @property
+    def is_prod(self) -> bool:
+        """Returns True if running in production mode."""
+        return self.environment == "PROD"
 
     def is_owner(self, user_id: int) -> bool:
         """Check if a user is a bot owner."""

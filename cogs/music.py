@@ -107,7 +107,8 @@ class Music(commands.Cog):
         for node_config in self.bot.config.lavalink_nodes:
             node = wavelink.Node(
                 uri=f"{'https' if node_config.secure else 'http'}://{node_config.host}:{node_config.port}",
-                password=node_config.password
+                password=node_config.password,
+                retries=0
             )
             nodes.append(node)
 
@@ -115,8 +116,8 @@ class Music(commands.Cog):
             await wavelink.Pool.connect(nodes=nodes, client=self.bot, cache_capacity=100)
             self._lavalink_connected = True
             logger.info(f"Connected to {len(nodes)} Lavalink node(s)")
-        except Exception as e:
-            logger.warning(f"Could not connect to Lavalink: {e}. Music commands will not work until a Lavalink node is available.")
+        except Exception:
+            logger.warning("Could not connect to Lavalink. Music commands will not be available.")
 
     async def cog_unload(self) -> None:
         """Called when the cog is unloaded."""
@@ -194,49 +195,31 @@ class Music(commands.Cog):
 
     # ============== Play Commands ==============
 
-    @app_commands.command(name="play", description="Play a song or add it to the queue")
-    @app_commands.describe(query="Song name or URL to play")
-    async def play(self, interaction: discord.Interaction, query: str) -> None:
-        """Play a song or add it to the queue."""
-        if not interaction.user.voice:
-            return await interaction.response.send_message(
-                "❌ You must be in a voice channel!", ephemeral=True
-            )
-
-        await interaction.response.defer()
-
+    async def _connect_player(self, interaction: discord.Interaction) -> Optional[wavelink.Player]:
+        """Connect to the user's voice channel and return the player, or None on failure."""
         player: wavelink.Player = cast(wavelink.Player, interaction.guild.voice_client)
 
-        # Connect to voice if not already
         if not player:
             try:
                 player = await interaction.user.voice.channel.connect(cls=wavelink.Player)
                 player.text_channel = interaction.channel
                 player.loop_mode = LoopMode.NONE
 
-                # Set default volume from settings
                 settings = await self.bot.db.get_guild_settings(interaction.guild.id)
                 if settings:
                     await player.set_volume(settings.default_volume)
             except Exception as e:
-                return await interaction.followup.send(f"❌ Could not connect: {e}")
+                await interaction.followup.send(f"❌ Could not connect: {e}")
+                return None
 
-        # Check if user is in same channel
         if player.channel.id != interaction.user.voice.channel.id:
-            return await interaction.followup.send(
-                "❌ You must be in the same voice channel as me!"
-            )
+            await interaction.followup.send("❌ You must be in the same voice channel as me!")
+            return None
 
-        # Search for tracks
-        try:
-            tracks: wavelink.Search = await wavelink.Playable.search(query)
-        except Exception as e:
-            return await interaction.followup.send(f"❌ Search failed: {e}")
+        return player
 
-        if not tracks:
-            return await interaction.followup.send("❌ No results found!")
-
-        # Handle playlists vs single tracks
+    async def _play_tracks(self, interaction: discord.Interaction, player: wavelink.Player, tracks: wavelink.Search) -> None:
+        """Add tracks to the queue and send the appropriate embed."""
         if isinstance(tracks, wavelink.Playlist):
             for track in tracks.tracks:
                 track.requester = interaction.user.mention
@@ -273,6 +256,74 @@ class Music(commands.Cog):
                 embed.set_thumbnail(url=track.artwork)
 
         await interaction.followup.send(embed=embed)
+
+    @app_commands.command(name="play", description="Play a song or add it to the queue")
+    @app_commands.describe(query="Song name or URL to play")
+    async def play(self, interaction: discord.Interaction, query: str) -> None:
+        """Play a song or add it to the queue. Searches SoundCloud by default."""
+        if not interaction.user.voice:
+            return await interaction.response.send_message(
+                "❌ You must be in a voice channel!", ephemeral=True
+            )
+
+        await interaction.response.defer()
+
+        player = await self._connect_player(interaction)
+        if not player:
+            return
+
+        try:
+            if is_url(query):
+                tracks: wavelink.Search = await wavelink.Playable.search(query)
+            else:
+                tracks = await wavelink.Playable.search(
+                    query, source=wavelink.TrackSource.SoundCloud
+                )
+                if not tracks:
+                    tracks = await wavelink.Playable.search(
+                        query, source=wavelink.TrackSource.YouTubeMusic
+                    )
+        except Exception as e:
+            return await interaction.followup.send(f"❌ Search failed: {e}")
+
+        if not tracks:
+            return await interaction.followup.send("❌ No results found!")
+
+        await self._play_tracks(interaction, player, tracks)
+
+    @app_commands.command(name="youtube", description="Search and play a song from YouTube")
+    @app_commands.describe(query="Song name to search on YouTube")
+    async def youtube(self, interaction: discord.Interaction, query: str) -> None:
+        """Search YouTube specifically and play the result."""
+        if not interaction.user.voice:
+            return await interaction.response.send_message(
+                "❌ You must be in a voice channel!", ephemeral=True
+            )
+
+        await interaction.response.defer()
+
+        player = await self._connect_player(interaction)
+        if not player:
+            return
+
+        try:
+            if is_url(query):
+                tracks: wavelink.Search = await wavelink.Playable.search(query)
+            else:
+                tracks = await wavelink.Playable.search(
+                    query, source=wavelink.TrackSource.YouTubeMusic
+                )
+                if not tracks:
+                    tracks = await wavelink.Playable.search(
+                        query, source=wavelink.TrackSource.YouTube
+                    )
+        except Exception as e:
+            return await interaction.followup.send(f"❌ YouTube search failed: {e}")
+
+        if not tracks:
+            return await interaction.followup.send("❌ No results found on YouTube!")
+
+        await self._play_tracks(interaction, player, tracks)
 
     @app_commands.command(name="pause", description="Pause the current song")
     async def pause(self, interaction: discord.Interaction) -> None:
