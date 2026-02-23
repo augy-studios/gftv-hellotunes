@@ -1,5 +1,5 @@
 [Unit]
-Description=Augy Music Bot - Discord Music Bot
+Description=HelloTunes
 After=network.target lavalink.service
 Wants=lavalink.service
 
@@ -7,13 +7,13 @@ Wants=lavalink.service
 Type=simple
 User=augy
 Group=augy
-WorkingDirectory=/home/augy/augy-music-bot
-ExecStart=/home/augy/augy-music-bot/.venv/bin/python main.py
+WorkingDirectory=/home/augy/hellotunes
+ExecStart=/home/augy/hellotunes/.venv/bin/python main.py
 Restart=always
 RestartSec=10
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=augy-music-bot
+SyslogIdentifier=hellotunes
 
 # Environment
 Environment=PYTHONUNBUFFERED=1
