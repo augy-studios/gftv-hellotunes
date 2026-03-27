@@ -376,6 +376,37 @@ class Music(commands.Cog):
         await player.disconnect()
         await interaction.response.send_message("⏹️ Stopped and disconnected!")
 
+    @app_commands.command(name="join", description="Join your current voice channel")
+    async def join(self, interaction: discord.Interaction) -> None:
+        """Join the user's voice channel."""
+        if not interaction.user.voice:
+            return await interaction.response.send_message("❌ You must be in a voice channel!", ephemeral=True)
+
+        player: wavelink.Player = cast(wavelink.Player, interaction.guild.voice_client)
+
+        if player:
+            if player.channel.id == interaction.user.voice.channel.id:
+                return await interaction.response.send_message("❌ Already in your voice channel!", ephemeral=True)
+            await player.move_to(interaction.user.voice.channel)
+            await interaction.response.send_message(f"➡️ Moved to **{interaction.user.voice.channel.name}**!")
+        else:
+            player = await interaction.user.voice.channel.connect(cls=wavelink.Player)
+            player.text_channel = interaction.channel
+            player.loop_mode = LoopMode.NONE
+            await interaction.response.send_message(f"✅ Joined **{interaction.user.voice.channel.name}**!")
+
+    @app_commands.command(name="leave", description="Leave the voice channel")
+    async def leave(self, interaction: discord.Interaction) -> None:
+        """Leave the voice channel, clearing the queue."""
+        player: wavelink.Player = cast(wavelink.Player, interaction.guild.voice_client)
+
+        if not player:
+            return await interaction.response.send_message("❌ Not connected!", ephemeral=True)
+
+        player.queue.clear()
+        await player.disconnect()
+        await interaction.response.send_message("👋 Left the voice channel!")
+
     @app_commands.command(name="disconnect", description="Disconnect from voice channel")
     async def disconnect(self, interaction: discord.Interaction) -> None:
         """Disconnect from voice channel."""
