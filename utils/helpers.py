@@ -1,5 +1,5 @@
 """
-Music helper utilities for Augy Music Bot.
+Music helper utilities.
 """
 
 import re

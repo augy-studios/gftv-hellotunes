@@ -1,5 +1,5 @@
 """
-Filters Cog - Audio filters and effects for Augy Music Bot.
+Filters Cog - Audio filters and effects.
 """
 
 import logging

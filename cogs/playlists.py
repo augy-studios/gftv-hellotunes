@@ -1,5 +1,5 @@
 """
-Playlist Cog - Playlist management for Augy Music Bot.
+Playlist Cog - Playlist management.
 """
 
 import logging

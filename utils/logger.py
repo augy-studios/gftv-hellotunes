@@ -1,5 +1,5 @@
 """
-Logging configuration for Augy Music Bot.
+Logging configuration.
 """
 
 import logging

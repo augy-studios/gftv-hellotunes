@@ -1,5 +1,5 @@
 """
-Utilities package for Augy Music Bot.
+Utilities package.
 """
 
 from .config import Config, LavalinkNode

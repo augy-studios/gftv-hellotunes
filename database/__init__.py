@@ -1,5 +1,5 @@
 """
-Database package for Augy Music Bot.
+Database package.
 """
 
 from .database import Database, GuildSettings, Playlist

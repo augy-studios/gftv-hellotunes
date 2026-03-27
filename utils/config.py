@@ -1,5 +1,5 @@
 """
-Configuration management for Augy Music Bot.
+Configuration management.
 """
 
 import os

@@ -1,8 +1,6 @@
 """
-Augy Music Bot - A Discord Music Bot powered by Lavalink
-Based on Lavamusic by BotxLab, rewritten in Python
-
-Author: Augy
+A Discord Music Bot powered by Lavalink.
+Based on Lavamusic by BotxLab, rewritten in Python.
 """
 
 import asyncio
@@ -27,8 +25,8 @@ setup_logging()
 logger = logging.getLogger(__name__)
 
 
-class AugyMusicBot(commands.Bot):
-    """Main bot class for Augy Music Bot."""
+class MusicBot(commands.Bot):
+    """Main bot class."""
 
     def __init__(self) -> None:
         intents = discord.Intents.default()
@@ -168,7 +166,7 @@ class AugyMusicBot(commands.Bot):
 
 async def main() -> None:
     """Main entry point."""
-    bot = AugyMusicBot()
+    bot = MusicBot()
 
     token = os.getenv("TOKEN")
     if not token:

@@ -1,5 +1,5 @@
 """
-Settings Cog - Server configuration for Augy Music Bot.
+Settings Cog - Server configuration.
 """
 
 import logging

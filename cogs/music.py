@@ -1,5 +1,5 @@
 """
-Music Cog - Core music functionality for Augy Music Bot.
+Music Cog - Core music functionality.
 Uses Wavelink for Lavalink integration.
 """
 

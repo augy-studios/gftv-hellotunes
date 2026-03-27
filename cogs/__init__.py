@@ -1,3 +1,3 @@
 """
-Cogs package for Augy Music Bot.
+Cogs package.
 """

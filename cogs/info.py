@@ -1,5 +1,5 @@
 """
-Info Cog - Information and utility commands for Augy Music Bot.
+Info Cog - Information and utility commands.
 """
 
 import logging
@@ -42,7 +42,7 @@ class Info(commands.Cog):
     async def help(self, interaction: discord.Interaction) -> None:
         """Show help information."""
         embed = discord.Embed(
-            title="🎵 Augy Music Bot - Help",
+            title=f"🎵 {self.bot.user.name} - Help",
             description="A powerful Discord music bot powered by Lavalink!",
             color=self.bot.config.color["main"]
         )
@@ -231,7 +231,7 @@ class Info(commands.Cog):
         )
 
         embed = discord.Embed(
-            title="📨 Invite Augy Music Bot",
+            title=f"📨 Invite {self.bot.user.name}",
             description=(
                 f"Click the button below to add me to your server!\n\n"
                 f"[Direct Link]({invite_url})"

@@ -1,5 +1,5 @@
 """
-Database management for Augy Music Bot.
+Database management.
 Uses SQLite with aiosqlite for async operations.
 """
 
