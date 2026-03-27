@@ -286,10 +286,7 @@ class Music(commands.Cog):
 
         await interaction.response.defer()
 
-        player = await self._connect_player(interaction)
-        if not player:
-            return
-
+        # Search first — connect to VC only once we have a track ready to play
         try:
             if is_url(query):
                 tracks: wavelink.Search = await wavelink.Playable.search(query)
@@ -303,21 +300,11 @@ class Music(commands.Cog):
         if not tracks:
             return await interaction.followup.send("❌ No results found!")
 
-        try:
-            await self._play_tracks(interaction, player, tracks)
-        except wavelink.LavalinkException as e:
-            if e.status == 404:
-                # Stale session — disconnect, reconnect, and retry once
-                try:
-                    await player.disconnect()
-                except Exception:
-                    pass
-                player = await interaction.user.voice.channel.connect(cls=wavelink.Player)
-                player.text_channel = interaction.channel
-                player.loop_mode = LoopMode.NONE
-                await self._play_tracks(interaction, player, tracks)
-            else:
-                await interaction.followup.send(f"❌ Lavalink error: {e}")
+        player = await self._connect_player(interaction)
+        if not player:
+            return
+
+        await self._play_tracks(interaction, player, tracks)
 
     @app_commands.command(name="pause", description="Pause the current song")
     async def pause(self, interaction: discord.Interaction) -> None:
