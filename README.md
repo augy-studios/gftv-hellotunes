@@ -1,4 +1,4 @@
-# 🎵 Augy Music Bot
+# 🎵 Hello Tunes Music Bot
 
 A powerful Discord music bot written in Python, powered by Lavalink. Based on the popular [Lavamusic](https://github.com/botxlab/lavamusic) bot, rewritten for Python environments.
 
@@ -44,20 +44,20 @@ A powerful Discord music bot written in Python, powered by Lavalink. Based on th
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/augy-music-bot.git
-cd augy-music-bot
+git clone https://github.com/yourusername/gftv-hellotunes.git
+cd gftv-hellotunes
 ```
 
 ### 2. Create Virtual Environment
 
 ```bash
-python -m venv venv
+python -m venv .venv
 
 # Linux/macOS
-source venv/bin/activate
+source .venv/bin/activate
 
 # Windows
-venv\Scripts\activate
+.venv\Scripts\activate
 ```
 
 ### 3. Install Dependencies
@@ -93,7 +93,7 @@ python main.py
 ## 📁 Project Structure
 
 ```
-augy-music-bot/
+gftv-hellotunes/
 ├── main.py                 # Bot entry point
 ├── requirements.txt        # Python dependencies
 ├── .env.example           # Environment template
