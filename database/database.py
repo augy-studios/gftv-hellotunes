@@ -43,7 +43,7 @@ class Database:
 
     def __init__(self, db_path: str = None) -> None:
         """Initialize database connection."""
-        self.db_path = db_path or os.getenv("DATABASE_URL", "data/augymusic.db")
+        self.db_path = db_path or os.getenv("DATABASE_URL", "data/uwutunes.db")
         # Handle SQLite file:// prefix
         if self.db_path.startswith("file:"):
             self.db_path = self.db_path.replace("file:", "").lstrip("/")

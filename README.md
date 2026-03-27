@@ -119,7 +119,7 @@ augy-music-bot/
 │   └── database.py        # SQLite async database
 │
 ├── data/                  # Data storage (created at runtime)
-│   └── augymusic.db       # SQLite database
+│   └── uwutunes.db        # SQLite database
 │
 └── logs/                  # Log files (created at runtime)
     └── bot_YYYY-MM-DD.log
