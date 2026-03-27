@@ -279,10 +279,6 @@ class Music(commands.Cog):
                 tracks = await wavelink.Playable.search(
                     query, source=wavelink.TrackSource.SoundCloud
                 )
-                if not tracks:
-                    tracks = await wavelink.Playable.search(
-                        query, source=wavelink.TrackSource.YouTubeMusic
-                    )
         except Exception as e:
             return await interaction.followup.send(f"❌ Search failed: {e}")
 
@@ -304,40 +300,6 @@ class Music(commands.Cog):
                 await self._play_tracks(interaction, player, tracks)
             else:
                 await interaction.followup.send(f"❌ Lavalink error: {e}")
-
-    @app_commands.command(name="youtube", description="Search and play a song from YouTube")
-    @app_commands.describe(query="Song name to search on YouTube")
-    async def youtube(self, interaction: discord.Interaction, query: str) -> None:
-        """Search YouTube specifically and play the result."""
-        if not interaction.user.voice:
-            return await interaction.response.send_message(
-                "❌ You must be in a voice channel!", ephemeral=True
-            )
-
-        await interaction.response.defer()
-
-        player = await self._connect_player(interaction)
-        if not player:
-            return
-
-        try:
-            if is_url(query):
-                tracks: wavelink.Search = await wavelink.Playable.search(query)
-            else:
-                tracks = await wavelink.Playable.search(
-                    query, source=wavelink.TrackSource.YouTubeMusic
-                )
-                if not tracks:
-                    tracks = await wavelink.Playable.search(
-                        query, source=wavelink.TrackSource.YouTube
-                    )
-        except Exception as e:
-            return await interaction.followup.send(f"❌ YouTube search failed: {e}")
-
-        if not tracks:
-            return await interaction.followup.send("❌ No results found on YouTube!")
-
-        await self._play_tracks(interaction, player, tracks)
 
     @app_commands.command(name="pause", description="Pause the current song")
     async def pause(self, interaction: discord.Interaction) -> None:
