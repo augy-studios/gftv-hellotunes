@@ -94,6 +94,24 @@ class Music(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
+    async def cog_app_command_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError) -> None:
+        """Handle stale Lavalink sessions and other errors for all music commands."""
+        cause = getattr(error, "original", error)
+        if isinstance(cause, wavelink.LavalinkException) and cause.status == 404:
+            player = cast(wavelink.Player, interaction.guild.voice_client)
+            if player:
+                try:
+                    await player.disconnect()
+                except Exception:
+                    pass
+            msg = "⚠️ Lost connection to Lavalink. Please use `/play` to start again."
+            if interaction.response.is_done():
+                await interaction.followup.send(msg, ephemeral=True)
+            else:
+                await interaction.response.send_message(msg, ephemeral=True)
+        else:
+            raise error
+
     async def cog_load(self) -> None:
         """Called when the cog is loaded."""
         self._lavalink_connected = False
