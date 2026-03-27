@@ -364,17 +364,17 @@ class Music(commands.Cog):
         await player.skip()
         await interaction.response.send_message("⏭️ Skipped!")
 
-    @app_commands.command(name="stop", description="Stop playback and clear the queue")
+    @app_commands.command(name="stop", description="Stop playback, clear the queue, and disconnect")
     async def stop(self, interaction: discord.Interaction) -> None:
-        """Stop playback and clear queue."""
+        """Stop playback, clear queue, and disconnect from voice channel."""
         player: wavelink.Player = cast(wavelink.Player, interaction.guild.voice_client)
 
         if not player:
-            return await interaction.response.send_message("❌ No active player!", ephemeral=True)
+            return await interaction.response.send_message("❌ Not connected!", ephemeral=True)
 
         player.queue.clear()
-        await player.stop()
-        await interaction.response.send_message("⏹️ Stopped and cleared the queue!")
+        await player.disconnect()
+        await interaction.response.send_message("⏹️ Stopped and disconnected!")
 
     @app_commands.command(name="disconnect", description="Disconnect from voice channel")
     async def disconnect(self, interaction: discord.Interaction) -> None:
